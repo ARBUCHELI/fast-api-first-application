@@ -1,4 +1,19 @@
 from fastapi import FastAPI
+#from datetime import date
+from pydantic import BaseModel
+# Define model Item
+'''class Item(BaseModel):
+    name: str
+    quantity: int = 0
+    expiration: date = None
+'''
+# Define model Item
+class Item(BaseModel):
+    name: str
+    description: str
+
+# Define items at application start
+items = {"bananas": "Yellow fruit."}
 
 # Instantiate app
 app = FastAPI()
@@ -11,3 +26,16 @@ def root():
 @app.get("/hello")
 def hello(name: str = "Alan"):
     return {"message": f"Hello {name}"}
+
+@app.post("/")
+def root(item: Item):
+    name = item.name
+    return {"message": f"We have {name}"}
+
+
+@app.put("/items")
+def update_item(item: Item):
+    name = item.name
+    # Update the description
+    items[name] = item.description
+    return item
