@@ -8,13 +8,15 @@ from pydantic import BaseModel
     expiration: date = None
 '''
 # Define model Item
-class Item(BaseModel):
+'''class Item(BaseModel):
     name: str
     description: str
-
+'''
+class Item(BaseModel):
+    name: str
 # Define items at application start
-items = {"bananas": "Yellow fruit."}
-
+#items = {"bananas": "Yellow fruit."}
+items = {"apples", "oranges", "bananas"}
 # Instantiate app
 app = FastAPI()
 
@@ -39,3 +41,10 @@ def update_item(item: Item):
     # Update the description
     items[name] = item.description
     return item
+
+@app.delete("/items")
+def delete_item(item: Item):
+    name = item.name
+    # Delete the item
+    items.remove(name)
+    return {}
