@@ -1,5 +1,4 @@
-from fastapi import FastAPI
-#from datetime import date
+from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 # Define model Item
 '''class Item(BaseModel):
@@ -42,9 +41,21 @@ def update_item(item: Item):
     items[name] = item.description
     return item
 
+'''
 @app.delete("/items")
 def delete_item(item: Item):
     name = item.name
     # Delete the item
     items.remove(name)
     return {}
+'''
+@app.delete("/items")
+# Make asynchronous
+async def root(item: Item):
+    name = item.name
+    # Check if name is in items
+    if name not in items:
+        # Return the status code for not found
+        raise HTTPException(status_code=404, detail="Item not found.")
+    await items.remove(name)
+    return {"message": "Item deleted"}
